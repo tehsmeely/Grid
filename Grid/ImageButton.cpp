@@ -17,6 +17,7 @@ ImageButton::ImageButton(SDL_Point topleft, SDL_Renderer* ren, std::string image
 	srcRect = { 0, 0, buttonSize.w, buttonSize.h };
 	state = 0;
 	image = textureManager.loadImage(ren, imagepath);
+	active = 1;
 }
 ImageButton::ImageButton(SDL_Point topleft, SDL_Renderer* ren, std::string imagepath, SDL_Rect buttonSize, int inOnValue)
 {
@@ -26,6 +27,7 @@ ImageButton::ImageButton(SDL_Point topleft, SDL_Renderer* ren, std::string image
 	srcRect = { 0, 0, buttonSize.w, buttonSize.h };
 	state = 0;
 	image = textureManager.loadImage(ren, imagepath);
+	active = 1;
 }
 
 
@@ -37,29 +39,40 @@ ImageButton::~ImageButton()
 void ImageButton::Draw(SDL_Renderer* ren)
 {
 	//std::cout << "D ";
-	SDL_RenderCopy(ren, image, &srcRect, &rect);
+	if (active) {
+		SDL_RenderCopy(ren, image, &srcRect, &rect);
+	} else {
+		int oldX = srcRect.x;
+		srcRect.x = 2 * rect.w;
+		SDL_RenderCopy(ren, image, &srcRect, &rect);
+		srcRect.x = 2 * oldX;
+	}
 }
 
 int ImageButton::Click()
 {
-	int ret;
-	std::cout << "Button clicked! " << ImageButton::state << std::endl;
-	if (state == 0 || state == 1) // inactive or hover
-	{
-		std::cout << "button was in inactive or hover state" << std::endl;
-		state = 2;
-		ret = onValue;
+	if (active) {
+		int ret;
+		std::cout << "Button clicked! " << ImageButton::state << std::endl;
+		if (state == 0 || state == 1) // inactive or hover
+		{
+			std::cout << "button was in inactive or hover state" << std::endl;
+			state = 2;
+			ret = onValue;
+		}
+		else
+		{
+			std::cout << "button was in clicked state" << std::endl;
+			state = 0;
+			ret = offValue;
+		}
+		srcRect.x = state * rect.w;
+		std::cout << srcRect.x << ", " << srcRect.y << ", " << srcRect.w << ", " << srcRect.h << std::endl;
+		std::cout << ImageButton::state << std::endl;
+		return ret;
+	} else {
+		return -1;
 	}
-	else
-	{
-		std::cout << "button was in clicked state" << std::endl;
-		state = 0;
-		ret = offValue;
-	}
-	srcRect.x = state * rect.w;
-	std::cout << srcRect.x << ", " << srcRect.y << ", " << srcRect.w << ", " << srcRect.h << std::endl;
-	std::cout << ImageButton::state << std::endl;
-	return ret;
 }
 
 void ImageButton::HoverOn()
@@ -77,6 +90,15 @@ void ImageButton::HoverOff()
 		state = 0;
 		srcRect.x = state * rect.w;
 	}
+}
+
+void ImageButton::Activate()
+{
+	active = 1;
+}
+void ImageButton::Deactivate()
+{
+	active = 0;
 }
 
 /*******************************************************************************************************************/

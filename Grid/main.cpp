@@ -16,7 +16,6 @@ const int GRID_SIZE = 10;
 const Uint32 UPDATE_DELAY = 200; //in ms
 */
 int BORDER_VAL = 0;
-int TIME_UNLIMIT = 1;
 int gridSizeX = GRID_WIDTH / GRID_SIZE;
 int gridSizeY = GRID_HEIGHT / GRID_SIZE;
 
@@ -58,12 +57,39 @@ int main(int argc, char **argv){
 	SDL_Texture *texGrid = drawBackgroundGrid(renderer);
 
 
-	//
-	//SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
-	//	"Starting",
-	//	"Starting - Test",
-	//	window);
-	//
+	// Window for presets loading
+	const SDL_MessageBoxButtonData loadMSgBox_Buttons[] = {
+		{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel" },
+		{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Load (1)" },
+		{ 0, 3, "Load (2)" },
+		{ 0, 4, "Load (3)" }
+	};
+	const SDL_MessageBoxColorScheme loadMSgBox_ColourScheme = {
+		{ /* .colors (.r, .g, .b) */
+		  /* [SDL_MESSAGEBOX_COLOR_BACKGROUND] */
+			{ 255,   0,   0 },
+			/* [SDL_MESSAGEBOX_COLOR_TEXT] */
+			{ 0, 255,   0 },
+			/* [SDL_MESSAGEBOX_COLOR_BUTTON_BORDER] */
+			{ 255, 255,   0 },
+			/* [SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND] */
+			{ 0,   0, 255 },
+			/* [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED] */
+			{ 255,   0, 255 }
+		}
+	};
+	const SDL_MessageBoxData loadMsgBox_Data = {
+		SDL_MESSAGEBOX_INFORMATION, /* .flags */
+		NULL, /* .window */
+		"Select Preset File", /* .title */
+		"Select a file to Load", /* .message */
+		SDL_arraysize(loadMSgBox_Buttons), /* .numbuttons */
+		loadMSgBox_Buttons, /* .buttons */
+		&loadMSgBox_ColourScheme /* .colorScheme */
+	};
+
+
+
 
 	// Load image and set it as our window icon
 	SDL_Surface *windowIcon;
@@ -78,6 +104,10 @@ int main(int argc, char **argv){
 	// Load ui bar
 	SDL_Rect uiBarRect = { SCREEN_WIDTH - 199, 0, 200, SCREEN_HEIGHT };
 	UIBar* uiBar = new UIBar(uiBarRect, renderer);
+
+	// boolean switch for unlimiting the update time
+	int timeUnlimited = 0;
+
 
 	//int grid[gridSizeX][gridSizeY] = { 0 };
 	int **grid1;
@@ -113,7 +143,7 @@ int main(int argc, char **argv){
 		if (running)
 		{	// Check if it has been 1*UPDATE_DELAY since last update, if so, update
 			time = SDL_GetTicks();
-			if ((TIME_UNLIMIT) || (time > lastTime + UPDATE_DELAY))
+			if ((timeUnlimited) || (time > lastTime + UPDATE_DELAY))
 			{ // UPDATE_DELAY ms has passed, update, and set last time to this time
 				std::cout << "Updating" << std::endl;
 				update(activeGrid, inactiveGrid);
@@ -146,12 +176,12 @@ int main(int argc, char **argv){
 							case 0: // stop run
 								running = 0;
 								std::cout << "Running: " << running << std::endl;
-								break;
+								uiBar->OneStepButton->Activate();
 								break;
 							case 1: // start run
 								running = 1;
 								std::cout << "Running: " << running << std::endl;
-								break;
+								uiBar->OneStepButton->Deactivate();
 								break;
 							case 2: // stop onestep - nothing
 								break;
@@ -162,9 +192,33 @@ int main(int argc, char **argv){
 								uiBar->Step();
 								break;
 							case 4:
+								// "quit" off - pass;
 								break;
 							case 5:
 								quit = 1;
+								break;
+							case 6:
+								timeUnlimited = 0;
+								break;
+							case 7:
+								timeUnlimited = 1;
+								break;
+							case 8:
+								// "load" off - pass;
+								break;
+							case 9:
+								int buttonid;
+								if (SDL_ShowMessageBox(&loadMsgBox_Data, &buttonid) < 0) {
+									SDL_Log("error displaying message box");
+									return 1;
+								}
+								if (buttonid == -1) {
+									SDL_Log("no selection");
+								}
+								else {
+									SDL_Log("selection was %s", loadMSgBox_Buttons[buttonid].text);
+								}
+								uiBar->Click(SDL_Point{ mouseX, mouseY });
 								break;
 						}
 					}

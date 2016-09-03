@@ -27,7 +27,13 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 		SDL_Point{ centreX - buttonRects.w / 2, 130 }, ren, "../resource/oneStepButton.png", buttonRects, 3, 2
 	);
 	QuitButton = new ImageButton(
-		SDL_Point{ centreX - buttonRects.w / 2, 190 }, ren, "../resource/quitButton.png", buttonRects, 5, 4
+		SDL_Point{ centreX - buttonRects.w / 2, rect.h - 50 }, ren, "../resource/quitButton.png", buttonRects, 5, 4
+	);
+	UnlimitStepsButton = new ImageButton(
+		SDL_Point{ centreX - buttonRects.w / 2, rect.h - 110 }, ren, "../resource/unLimitButton.png", buttonRects, 7, 6
+	);
+	LoadButton = new ImageButton(
+		SDL_Point{ centreX - buttonRects.w / 2, rect.h /2 + 20 }, ren, "../resource/loadButton.png", buttonRects, 9, 8
 	);
 
 	font = TTF_OpenFont("../resource/sample.ttf", 22);
@@ -39,6 +45,8 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 	buttons.push_back(PlayButton);
 	buttons.push_back(OneStepButton);
 	buttons.push_back(QuitButton);
+	buttons.push_back(UnlimitStepsButton);
+	buttons.push_back(LoadButton);
 }
 
 
@@ -76,7 +84,7 @@ void UIBar::Draw(SDL_Renderer* ren)
 	} else {
 		SDL_QueryTexture(stepNumberText, NULL, NULL, &tW, &tH);
 		x = centreX - tW / 2;
-		y = rect.h - 75;
+		y = 180;
 		renderTexture(stepNumberText, ren, x, y);
 	}
 	SDL_DestroyTexture(titleText);

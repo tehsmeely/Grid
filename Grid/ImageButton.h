@@ -8,7 +8,7 @@ class ImageButton
 {
 protected:
 	SDL_Texture* image;
-	int onValue, offValue;
+	int onValue, offValue, active;
 public:
 	SDL_Rect rect, srcRect;
 	int state; // 0-inactive, 1-hover, 2-clicked
@@ -20,6 +20,8 @@ public:
 	int Click();
 	void HoverOn();
 	void HoverOff();
+	void Activate();
+	void Deactivate();
 	void Unclick() { state = 0; srcRect.x = 0; }
 
 	SDL_Rect GetRect() { return rect; }

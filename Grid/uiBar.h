@@ -17,7 +17,7 @@ protected:
 public:
 	int stepNumber;
 	SDL_Rect rect;
-	ImageButton *PlayButton, *OneStepButton, *QuitButton;
+	ImageButton *PlayButton, *OneStepButton, *QuitButton, *UnlimitStepsButton, *LoadButton;
 
 	UIBar(SDL_Rect irect, SDL_Renderer* ren);
 	~UIBar();
