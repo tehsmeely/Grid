@@ -5,6 +5,7 @@
 #include "globals.h"
 #include "helpers.h"
 #include "uiBar.h"
+#include "presetFile.h"
 
 // Variable/constant Declares
 /*
@@ -15,9 +16,7 @@ const int GRID_HEIGHT = 980;
 const int GRID_SIZE = 10;
 const Uint32 UPDATE_DELAY = 200; //in ms
 */
-int BORDER_VAL = 0;
-int gridSizeX = GRID_WIDTH / GRID_SIZE;
-int gridSizeY = GRID_HEIGHT / GRID_SIZE;
+
 
 
 // Function Declares
@@ -58,12 +57,25 @@ int main(int argc, char **argv){
 
 
 	// Window for presets loading
-	const SDL_MessageBoxButtonData loadMSgBox_Buttons[] = {
-		{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel" },
-		{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Load (1)" },
-		{ 0, 3, "Load (2)" },
-		{ 0, 4, "Load (3)" }
+	int msgBoxButtonID;
+	const SDL_MessageBoxButtonData loadMsgBox_Buttons[] = {
+		{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Load (1)" },
+		{ 0, 1, "Load (2)" },
+		{ 0, 2, "Load (3)" },
+		{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 3, "Cancel" },
 	};
+	const SDL_MessageBoxButtonData saveMsgBox_Buttons[] = {
+		{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Save (1)" },
+		{ 0, 1, "Save (2)" },
+		{ 0, 2, "Save (3)" },
+		{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 3, "Cancel" },
+	};
+	std::string filenameMappings[] = {
+		"../resource/gridPreset1.ssv",
+		"../resource/gridPreset2.ssv",
+		"../resource/gridPreset3.ssv",
+	};
+
 	const SDL_MessageBoxColorScheme loadMSgBox_ColourScheme = {
 		{ /* .colors (.r, .g, .b) */
 		  /* [SDL_MESSAGEBOX_COLOR_BACKGROUND] */
@@ -82,9 +94,18 @@ int main(int argc, char **argv){
 		SDL_MESSAGEBOX_INFORMATION, /* .flags */
 		NULL, /* .window */
 		"Select Preset File", /* .title */
-		"Select a file to Load", /* .message */
-		SDL_arraysize(loadMSgBox_Buttons), /* .numbuttons */
-		loadMSgBox_Buttons, /* .buttons */
+		"Select a slot to load from:", /* .message */
+		SDL_arraysize(loadMsgBox_Buttons), /* .numbuttons */
+		loadMsgBox_Buttons, /* .buttons */
+		&loadMSgBox_ColourScheme /* .colorScheme */
+	};
+	const SDL_MessageBoxData saveMsgBox_Data = {
+		SDL_MESSAGEBOX_INFORMATION, /* .flags */
+		NULL, /* .window */
+		"Select Preset File", /* .title */
+		"Select a slot to save to:", /* .message */
+		SDL_arraysize(saveMsgBox_Buttons), /* .numbuttons */
+		saveMsgBox_Buttons, /* .buttons */
 		&loadMSgBox_ColourScheme /* .colorScheme */
 	};
 
@@ -173,6 +194,7 @@ int main(int argc, char **argv){
 					int response = uiBar->Click(SDL_Point{ mouseX, mouseY });
 					if (response >= 0) { // response is: 0 - button0_off, 1 - button0_on, 2 - button1_on, 3 - button1_off, ...
 						switch (response) {
+							// 0: Run Button
 							case 0: // stop run
 								running = 0;
 								std::cout << "Running: " << running << std::endl;
@@ -183,6 +205,7 @@ int main(int argc, char **argv){
 								std::cout << "Running: " << running << std::endl;
 								uiBar->OneStepButton->Deactivate();
 								break;
+							// 1: One Step Button
 							case 2: // stop onestep - nothing
 								break;
 							case 3:
@@ -191,34 +214,54 @@ int main(int argc, char **argv){
 								uiBar->Click(SDL_Point{ mouseX, mouseY });
 								uiBar->Step();
 								break;
+							// 2: Quit Button
 							case 4:
 								// "quit" off - pass;
 								break;
 							case 5:
 								quit = 1;
 								break;
+							// 3: Unlimit Button
 							case 6:
 								timeUnlimited = 0;
 								break;
 							case 7:
 								timeUnlimited = 1;
 								break;
+							// 4: Load Button
 							case 8:
 								// "load" off - pass;
 								break;
 							case 9:
-								int buttonid;
-								if (SDL_ShowMessageBox(&loadMsgBox_Data, &buttonid) < 0) {
+								if (SDL_ShowMessageBox(&loadMsgBox_Data, &msgBoxButtonID) < 0) {
 									SDL_Log("error displaying message box");
 									return 1;
 								}
-								if (buttonid == -1) {
+								if (msgBoxButtonID == -1) {
 									SDL_Log("no selection");
 								}
 								else {
-									SDL_Log("selection was %s", loadMSgBox_Buttons[buttonid].text);
+									std::string filename = filenameMappings[msgBoxButtonID];
+									loadPreset(filename, grid1, grid2);
+									drawGrid(renderer, *activeGrid, texGrid);
 								}
 								uiBar->Click(SDL_Point{ mouseX, mouseY });
+								break;
+							// 3: Save Button
+							case 10:
+								break;
+							case 11:
+								if (SDL_ShowMessageBox(&saveMsgBox_Data, &msgBoxButtonID) < 0) {
+									SDL_Log("error displaying message box");
+								} else {
+									if (msgBoxButtonID == -1) {
+										SDL_Log("no selection");
+									} else {
+										std::string filename = filenameMappings[msgBoxButtonID];
+										savePreset(filename, *activeGrid);
+									}
+									uiBar->Click(SDL_Point{ mouseX, mouseY });
+								}
 								break;
 						}
 					}
@@ -436,3 +479,4 @@ SDL_Texture* drawTextBox(SDL_Renderer* renderer, TTF_Font* font)
 	SDL_SetRenderTarget(renderer, NULL); // back to default, not texGrid anymore
 	return textBox;
 }
+

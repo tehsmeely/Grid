@@ -10,5 +10,8 @@ extern const int GRID_HEIGHT;
 extern const int GRID_SIZE;
 extern const Uint32 UPDATE_DELAY; //in ms
 extern TextureManager textureManager;
+extern int BORDER_VAL;
+extern int gridSizeX;
+extern int gridSizeY;
 
 #endif

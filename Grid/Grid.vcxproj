@@ -79,6 +79,7 @@
     <ClCompile Include="ImageButton.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="paths.cpp" />
+    <ClCompile Include="presetFile.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="uiBar.cpp" />
   </ItemGroup>
@@ -87,15 +88,12 @@
     <ClInclude Include="helpers.h" />
     <ClInclude Include="ImageButton.h" />
     <ClInclude Include="paths.h" />
+    <ClInclude Include="presetFile.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="uiBar.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\windowIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

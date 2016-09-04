@@ -36,6 +36,9 @@
     <ClCompile Include="uiBar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="presetFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helpers.h">
@@ -56,14 +59,13 @@
     <ClInclude Include="uiBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="presetFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\windowIcon.png">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

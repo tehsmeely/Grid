@@ -35,6 +35,9 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 	LoadButton = new ImageButton(
 		SDL_Point{ centreX - buttonRects.w / 2, rect.h /2 + 20 }, ren, "../resource/loadButton.png", buttonRects, 9, 8
 	);
+	SaveButton = new ImageButton(
+		SDL_Point{ centreX - buttonRects.w / 2, rect.h / 2 - (buttonRects.h + 20) }, ren, "../resource/saveButton.png", buttonRects, 11, 10
+	);
 
 	font = TTF_OpenFont("../resource/sample.ttf", 22);
 	if (font == nullptr) {
@@ -47,6 +50,7 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 	buttons.push_back(QuitButton);
 	buttons.push_back(UnlimitStepsButton);
 	buttons.push_back(LoadButton);
+	buttons.push_back(SaveButton);
 }
 
 
@@ -127,7 +131,6 @@ void UIBar::Hover(SDL_Point pos)
 	{
 		if (collidepoint(localPos, b->GetRect()))
 		{
-			std::cout << "hover!" << std::endl;
 			b->HoverOn();
 		}
 		else
