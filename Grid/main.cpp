@@ -7,22 +7,12 @@
 #include "uiBar.h"
 #include "presetFile.h"
 
-// Variable/constant Declares
-/*
-const int SCREEN_WIDTH = 1400;
-const int SCREEN_HEIGHT = 981; // Min GRID_HEIGHT + 1 to allow for bottom line
-const int GRID_WIDTH = 1200;
-const int GRID_HEIGHT = 980;
-const int GRID_SIZE = 10;
-const Uint32 UPDATE_DELAY = 200; //in ms
-*/
-
-
 
 // Function Declares
 SDL_Texture* drawBackgroundGrid(SDL_Renderer*);
 void drawGrid(SDL_Renderer*, int**, SDL_Texture*);
 void printArray(int**, int, int);
+void resetGrids(int**, int**);
 void update(int***, int***);
 int getGridVal(int**, int, int);
 int getNeighbours(int**, int, int);
@@ -263,6 +253,14 @@ int main(int argc, char **argv){
 									uiBar->Click(SDL_Point{ mouseX, mouseY });
 								}
 								break;
+								// 4: Reset Button
+							case 12:
+								break;
+							case 13:
+								resetGrids(grid1, grid2);
+								uiBar->ResetStep();
+								uiBar->Click(SDL_Point{ mouseX, mouseY });
+								break;
 						}
 					}
 				}
@@ -393,6 +391,15 @@ void printArray(int** arr,int x,int y)
 			std::cout << arr[i][j];
 		}
 		std::cout << std::endl;
+	}
+}
+
+void resetGrids(int **grid1, int **grid2) {
+	for (int rowY = 0; rowY < gridSizeY; rowY++) {
+		for (int rowX = 0; rowX < gridSizeX; rowX++) {
+			grid1[rowX][rowY] = 0;
+			grid2[rowX][rowY] = 0;
+		}
 	}
 }
 

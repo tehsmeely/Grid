@@ -17,7 +17,7 @@ protected:
 public:
 	int stepNumber;
 	SDL_Rect rect;
-	ImageButton *PlayButton, *OneStepButton, *QuitButton, *UnlimitStepsButton, *LoadButton, *SaveButton;
+	ImageButton *PlayButton, *OneStepButton, *QuitButton, *UnlimitStepsButton, *LoadButton, *SaveButton, *ResetButton;
 
 	UIBar(SDL_Rect irect, SDL_Renderer* ren);
 	~UIBar();
@@ -26,6 +26,7 @@ public:
 	int Click(SDL_Point);
 	void Hover(SDL_Point);
 	void Step() { stepNumber++; }
+	void ResetStep() { stepNumber = 0; }
 
 	SDL_Rect GetRect() { return rect; }
 };

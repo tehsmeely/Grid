@@ -20,6 +20,7 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 
 
 	SDL_Rect buttonRects = { 0, 0, 100, 40 };
+	SDL_Rect resetButtonRect = { 0, 0, 80, 30 };
 	PlayButton = new ImageButton(
 		SDL_Point{ centreX - buttonRects.w / 2, 70 }, ren, "../resource/runButton.png", buttonRects, 1, 0
 	);
@@ -38,6 +39,9 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 	SaveButton = new ImageButton(
 		SDL_Point{ centreX - buttonRects.w / 2, rect.h / 2 - (buttonRects.h + 20) }, ren, "../resource/saveButton.png", buttonRects, 11, 10
 	);
+	ResetButton = new ImageButton(
+		SDL_Point{ centreX - resetButtonRect.w / 2, 210 }, ren, "../resource/resetButton.png", resetButtonRect, 13, 12
+	);
 
 	font = TTF_OpenFont("../resource/sample.ttf", 22);
 	if (font == nullptr) {
@@ -51,6 +55,7 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 	buttons.push_back(UnlimitStepsButton);
 	buttons.push_back(LoadButton);
 	buttons.push_back(SaveButton);
+	buttons.push_back(ResetButton);
 }
 
 
