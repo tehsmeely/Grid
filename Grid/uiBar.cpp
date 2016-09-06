@@ -58,12 +58,11 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 	buttons.push_back(ResetButton);
 }
 
+UIBar::~UIBar() {
+	buttons.clear();
 
-
-
-UIBar::~UIBar()
-{
 }
+
 
 void UIBar::Draw(SDL_Renderer* ren)
 {
@@ -142,5 +141,13 @@ void UIBar::Hover(SDL_Point pos)
 		{
 			b->HoverOff();
 		}
+	}
+}
+
+void UIBar::forcePlayButtonState(int running)
+{
+	if ((running && PlayButton->state < 2) || (!running && PlayButton->state == 2)) {
+		//button is inactive/hovered but its running
+		PlayButton->Click();
 	}
 }

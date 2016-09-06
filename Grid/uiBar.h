@@ -27,6 +27,7 @@ public:
 	void Hover(SDL_Point);
 	void Step() { stepNumber++; }
 	void ResetStep() { stepNumber = 0; }
+	void forcePlayButtonState(int);
 
 	SDL_Rect GetRect() { return rect; }
 };

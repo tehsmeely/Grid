@@ -120,7 +120,7 @@ int main(int argc, char **argv){
 	int timeUnlimited = 0;
 
 
-	//int grid[gridSizeX][gridSizeY] = { 0 };
+	//int initalise the grid pair
 	int **grid1;
 	grid1 = (int **)calloc(gridSizeX, sizeof(int));
 	for (int i = 0; i < gridSizeX; i++)
@@ -132,22 +132,14 @@ int main(int argc, char **argv){
 	int*** activeGrid = &grid1;
 	int*** inactiveGrid = &grid2;
 	drawGrid(renderer, *activeGrid, texGrid);
+
+
+	//loop vars
 	int mouseX, mouseY, quit = 0, running = 0;
 	Uint32 lastTime = 0, time;
-
-	
-	/*
-	std::cout << "making test text" << std::endl;
-	//SDL_Texture* testText = renderText("test", black, 22, renderer, font);
-	SDL_Texture* testText = renderText("test", "../res/sample.ttf", black, 22, renderer);
-	if (testText == nullptr){ std::cout << "Text make not successful" << std::endl; return 1; }
-	// SDL_Texture* titleText = renderText("Game of Life!", black, 22, renderer, font);
-	textureBlit(renderer, textBox, testText, 100, 200, 1);
-	*/
-	
-	//drawText(renderer, textBox);
-
 	SDL_Event e;
+
+
 	while (!quit)
 	{
 		// Running=True enables updates
@@ -272,17 +264,14 @@ int main(int argc, char **argv){
 				{
 					case SDLK_RETURN: // Enter Key, start/stop running the simulation!
 						running = !running;
+						uiBar->forcePlayButtonState(running);
 						std::cout << "Running: " << running << std::endl;
 						break;
 					case SDLK_SPACE: // Space Key, draw grid in console
-						for (int rowY = 0; rowY < gridSizeY; rowY++)
-						{
-							for (int rowX = 0; rowX < gridSizeX; rowX++)
-							{
-								std::cout << (*activeGrid)[rowX][rowY] << " ";
-							}
-							std::cout << std::endl;
-						}
+						update(activeGrid, inactiveGrid);
+						drawGrid(renderer, *activeGrid, texGrid);
+						uiBar->Click(SDL_Point{ mouseX, mouseY });
+						uiBar->Step();
 						break;
 				}
 			}
