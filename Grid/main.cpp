@@ -1,7 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <SDL.h>
-#include <SDL_ttf.h>
+//#include <SDL_ttf.h>
 #include "globals.h"
 #include "helpers.h"
 #include "uiBar.h"
@@ -17,7 +17,6 @@ void update(int***, int***);
 int getGridVal(int**, int, int);
 int getNeighbours(int**, int, int);
 void drawText(SDL_Renderer*, SDL_Texture*);
-SDL_Texture* drawTextBox(SDL_Renderer*, TTF_Font*);
 
 SDL_Color black = { 0, 0, 0, 255 };
 
@@ -250,6 +249,7 @@ int main(int argc, char **argv){
 								break;
 							case 13:
 								resetGrids(grid1, grid2);
+								drawGrid(renderer, *activeGrid, texGrid);
 								uiBar->ResetStep();
 								uiBar->Click(SDL_Point{ mouseX, mouseY });
 								break;
@@ -329,22 +329,10 @@ void update(int*** activeGrid, int*** inactiveGrid)
 		}
 	}
 	// Flip pointers
-	/*
-	*activeGrid = iGrid;
-	*inactiveGrid = aGrid;
-	
-	printArray(aGrid, gridSizeX, gridSizeY);
-	std::cout << std::endl;
-	
-	printArray(*activeGrid, gridSizeX, gridSizeY);
-	*/
 	int** tmpPtr;
 	tmpPtr = *activeGrid;
 	*activeGrid = *inactiveGrid;
 	*inactiveGrid = tmpPtr; 
-	/*
-	std::cout << "Active Grid [0][1]: " << activeGrid[0][1] << std::endl;
-	std::cout << "Inactive Grid [0][1]: " << inactiveGrid[0][1] << std::endl; */
 }
 
 int getNeighbours(int** grid, int x, int y)
@@ -365,7 +353,7 @@ int getNeighbours(int** grid, int x, int y)
 
 int getGridVal(int** grid, int x, int y)
 {
-	if (x == -1 || x == gridSizeX || y == -1 || y == gridSizeY)
+	if (x <= -1 || x >= gridSizeX || y <= -1 || y >= gridSizeY)
 		return BORDER_VAL;
 	else
 		return grid[x][y];
@@ -449,30 +437,30 @@ SDL_Texture* drawBackgroundGrid(SDL_Renderer* renderer)
 }
 
 
-SDL_Texture* drawTextBox(SDL_Renderer* renderer, TTF_Font* font)
-{
-	std::cout << "DEPRECATED CALL TO drawTextBox. wuttt??" << std::endl;
-	int centreX = /*GRID_WIDTH + */((SCREEN_WIDTH - GRID_WIDTH) / 2),
-		centreY = SCREEN_HEIGHT / 2;
-	//std::cout << ""
-	SDL_Texture *textBox = SDL_CreateTexture(renderer, 0, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH - GRID_WIDTH-1, SCREEN_HEIGHT);
-	SDL_SetRenderTarget(renderer, textBox); // draw to our sidebox texture
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderClear(renderer);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-	SDL_Texture* titleText = renderText("Game of Life!", black, 22, renderer, font);
-	if (titleText == nullptr){ std::cout << "Text make not successful" << std::endl;}
-	int tW, tH, x, y;
-	SDL_QueryTexture(titleText, NULL, NULL, &tW, &tH);
-	x = centreX - tW / 2;
-	y = 60 - tH / 2;
-	renderTexture(titleText, renderer, x, y);
-
-
-
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_SetRenderTarget(renderer, NULL); // back to default, not texGrid anymore
-	return textBox;
-}
+//SDL_Texture* drawTextBox(SDL_Renderer* renderer, TTF_Font* font)
+//{
+//	std::cout << "DEPRECATED CALL TO drawTextBox. wuttt??" << std::endl;
+//	int centreX = /*GRID_WIDTH + */((SCREEN_WIDTH - GRID_WIDTH) / 2),
+//		centreY = SCREEN_HEIGHT / 2;
+//	//std::cout << ""
+//	SDL_Texture *textBox = SDL_CreateTexture(renderer, 0, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH - GRID_WIDTH-1, SCREEN_HEIGHT);
+//	SDL_SetRenderTarget(renderer, textBox); // draw to our sidebox texture
+//	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//	SDL_RenderClear(renderer);
+//	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+//
+//	SDL_Texture* titleText = renderText("Game of Life!", black, 22, renderer, font);
+//	if (titleText == nullptr){ std::cout << "Text make not successful" << std::endl;}
+//	int tW, tH, x, y;
+//	SDL_QueryTexture(titleText, NULL, NULL, &tW, &tH);
+//	x = centreX - tW / 2;
+//	y = 60 - tH / 2;
+//	renderTexture(titleText, renderer, x, y);
+//
+//
+//
+//	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//	SDL_SetRenderTarget(renderer, NULL); // back to default, not texGrid anymore
+//	return textBox;
+//}
 
