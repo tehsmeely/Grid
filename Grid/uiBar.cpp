@@ -43,7 +43,7 @@ UIBar::UIBar(SDL_Rect irect, SDL_Renderer* ren)
 		SDL_Point{ centreX - resetButtonRect.w / 2, 210 }, ren, "../resource/resetButton.png", resetButtonRect, 13, 12
 	);
 
-	font = TTF_OpenFont("../resource/sample.ttf", 22);
+	font = TTF_OpenFont("../resource/Cantarell-Regular.ttf", 22);
 	if (font == nullptr) {
 		logSDLError(std::cout, "TTF_OpenFont");
 		std::cout << "UIBar Font load Failed!" << std::endl;
