@@ -1,11 +1,15 @@
 #include <iostream>
 #include <windows.h>
 #include <SDL.h>
-//#include <SDL_ttf.h>
 #include "globals.h"
 #include "helpers.h"
 #include "uiBar.h"
 #include "presetFile.h"
+
+
+//http://stackoverflow.com/questions/30412951/unresolved-external-symbol-imp-fprintf-and-imp-iob-func-sdl2
+extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
+
 
 
 // Function Declares
